@@ -103,32 +103,38 @@ python cafe_analyzer.py --json example_menu.json
 
 ## How to Populate Your Menu Data
 
-To analyze your actual cafe menu, you need to get the menu data into the system. See the **[Data Entry Guide](DATA_ENTRY_GUIDE.md)** for detailed instructions.
+### For Weekly Changing Menus (Recommended)
+
+Since menus change weekly, you need automation. **See [AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md)** for complete setup.
 
 **Quick options:**
 
-1. **Interactive Helper Script** (Easiest):
+1. **Browser Extension** (⭐ EASIEST - 30 sec/week):
+   - Install `browser-extension/` in Chrome
+   - Click icon on cafe website → Extract → Download
+   - Works 100% of the time, bypasses all bot protection
+   - See [browser-extension/README.md](browser-extension/README.md)
+
+2. **Enhanced Automated Scraper** (Semi-automated):
    ```bash
-   python menu_entry_helper.py
+   pip install undetected-chromedriver playwright
+   python enhanced_scraper.py https://sony.cafebonappetit.com menu.json
    ```
-   Enter items one at a time or paste comma-separated data.
+   Better bot evasion than standard scraping
 
-2. **Create JSON File Manually**:
-   ```json
-   [
-     {"name": "Item Name", "price": 6.99, "calories": 720}
-   ]
+3. **Scheduled Weekly Scraper** (Fully automated):
+   ```bash
+   python weekly_scraper.py setup    # See setup instructions
+   python weekly_scraper.py test     # Test it works
+   # Then set up cron/Task Scheduler for weekly automation
    ```
-   Then upload via web interface or use `--json` flag.
+   Runs automatically every week, saves dated menus
 
-3. **Visit sony.cafebonappetit.com** and manually collect:
-   - Item names
-   - Prices
-   - Calorie counts (click items for nutrition info)
+**Recommended:** Use browser extension (100% reliable) or set up scheduled scraper with extension as backup.
 
-   Then use the helper script or create a JSON file.
+### For One-Time/Manual Entry
 
-See [DATA_ENTRY_GUIDE.md](DATA_ENTRY_GUIDE.md) for complete instructions.
+See [DATA_ENTRY_GUIDE.md](DATA_ENTRY_GUIDE.md) for manual data entry methods.
 
 ## Notes
 
@@ -166,12 +172,22 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
 ├── app.py                  # Flask web application
 ├── cafe_analyzer.py        # Command-line tool
 ├── analyzer.py             # Analysis logic
-├── scraper.py              # Web scraping module
+├── scraper.py              # Basic web scraping module
+├── enhanced_scraper.py     # Advanced scraper with bot evasion
+├── weekly_scraper.py       # Automated weekly scraping
+├── menu_entry_helper.py    # Interactive data entry tool
 ├── requirements.txt        # Python dependencies
 ├── example_menu.json       # Sample menu data
 ├── Procfile               # For Heroku/Render deployment
 ├── runtime.txt            # Python version specification
 ├── DEPLOYMENT.md          # Detailed deployment guide
+├── DATA_ENTRY_GUIDE.md    # Manual data entry methods
+├── AUTOMATION_GUIDE.md    # Weekly automation setup (★ Important!)
+├── browser-extension/      # Chrome extension for data capture
+│   ├── manifest.json
+│   ├── popup.html
+│   ├── popup.js
+│   └── README.md          # Extension installation guide
 ├── docs/
 │   └── index.html         # Static version for GitHub Pages
 ├── templates/              # Flask HTML templates

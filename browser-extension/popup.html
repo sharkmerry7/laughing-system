@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 350px;
+      padding: 15px;
+      font-family: Arial, sans-serif;
+    }
+    h2 {
+      margin: 0 0 15px 0;
+      font-size: 18px;
+      color: #2c3e50;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin: 5px 0;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    #extractBtn {
+      background: #3498db;
+      color: white;
+    }
+    #extractBtn:hover {
+      background: #2980b9;
+    }
+    #downloadBtn {
+      background: #27ae60;
+      color: white;
+      display: none;
+    }
+    #downloadBtn:hover {
+      background: #229954;
+    }
+    #status {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+    }
+    .success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    #itemList {
+      margin-top: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 12px;
+    }
+    .item {
+      padding: 5px;
+      border-bottom: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <h2>Cafe Menu Scraper</h2>
+  <button id="extractBtn">Extract Menu Data</button>
+  <button id="downloadBtn">Download JSON</button>
+  <div id="status"></div>
+  <div id="itemList"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
