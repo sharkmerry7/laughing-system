@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Scrape Menu - Cafe Calorie Analyzer{% endblock %}
+
+{% block content %}
+<div class="scrape-page">
+    <h1>Scrape Menu from Website</h1>
+    <p>Enter a Cafe Bon Appetit URL to automatically scrape menu data.</p>
+
+    {% if error %}
+    <div class="error-message">
+        <strong>Error:</strong> {{ error }}
+    </div>
+    {% endif %}
+
+    <form action="{{ url_for('scrape') }}" method="post" class="scrape-form">
+        <div class="form-group">
+            <label for="url">Website URL</label>
+            <input type="url" id="url" name="url" placeholder="https://sony.cafebonappetit.com" required class="form-input">
+        </div>
+
+        <div class="form-group checkbox-group">
+            <label>
+                <input type="checkbox" name="use_selenium">
+                Use browser-based scraping (Selenium) - slower but works with bot protection
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Scrape Menu</button>
+    </form>
+
+    <div class="info-box">
+        <h3>About Web Scraping</h3>
+        <p>This tool attempts to automatically extract menu data from Cafe Bon Appetit websites.</p>
+
+        <h4>Standard Scraping (Default)</h4>
+        <ul>
+            <li>Fast and lightweight</li>
+            <li>May be blocked by bot protection (403 errors)</li>
+        </ul>
+
+        <h4>Browser-Based Scraping (Selenium)</h4>
+        <ul>
+            <li>Simulates a real browser</li>
+            <li>Better at bypassing bot protection</li>
+            <li>Requires Chrome and chromedriver to be installed</li>
+            <li>Slower than standard scraping</li>
+        </ul>
+
+        <h4>Troubleshooting</h4>
+        <p>If scraping fails:</p>
+        <ul>
+            <li>Try the browser-based scraping option</li>
+            <li>Check if the URL is correct</li>
+            <li>The website structure may have changed</li>
+            <li>As an alternative, manually save the menu data and use the Upload feature</li>
+        </ul>
+    </div>
+
+    <div class="info-box">
+        <h3>Example URLs</h3>
+        <ul>
+            <li>https://sony.cafebonappetit.com</li>
+            <li>https://[your-location].cafebonappetit.com</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+[
+  {
+    "name": "Breakfast Burrito",
+    "price": 6.99,
+    "calories": 720
+  },
+  {
+    "name": "Grilled Chicken Sandwich",
+    "price": 8.49,
+    "calories": 520
+  },
+  {
+    "name": "Caesar Salad",
+    "price": 7.99,
+    "calories": 350
+  },
+  {
+    "name": "Pepperoni Pizza Slice",
+    "price": 3.99,
+    "calories": 285
+  },
+  {
+    "name": "Veggie Burger",
+    "price": 7.49,
+    "calories": 420
+  },
+  {
+    "name": "French Fries",
+    "price": 2.99,
+    "calories": 365
+  },
+  {
+    "name": "Pasta Alfredo",
+    "price": 9.99,
+    "calories": 1200
+  },
+  {
+    "name": "Turkey Club Sandwich",
+    "price": 8.99,
+    "calories": 640
+  },
+  {
+    "name": "Garden Salad",
+    "price": 5.99,
+    "calories": 180
+  },
+  {
+    "name": "Cheeseburger",
+    "price": 6.99,
+    "calories": 680
+  },
+  {
+    "name": "BBQ Chicken Pizza (whole)",
+    "price": 12.99,
+    "calories": 1800
+  },
+  {
+    "name": "Soup of the Day",
+    "price": 4.99,
+    "calories": 220
+  },
+  {
+    "name": "Quesadilla",
+    "price": 6.49,
+    "calories": 580
+  },
+  {
+    "name": "Tuna Melt",
+    "price": 7.99,
+    "calories": 520
+  },
+  {
+    "name": "Chicken Tenders (5 pc)",
+    "price": 8.49,
+    "calories": 850
+  }
+]

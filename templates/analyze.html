@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Analysis Results - Cafe Calorie Analyzer{% endblock %}
+
+{% block content %}
+<div class="analysis-header">
+    <h1>Menu Analysis Results</h1>
+</div>
+
+{% if stats %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Total Items</h3>
+        <p class="stat-value">{{ stats.total_items }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Average Price</h3>
+        <p class="stat-value">${{ "%.2f"|format(stats.avg_price) }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Average Calories</h3>
+        <p class="stat-value">{{ "%.0f"|format(stats.avg_calories) }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Avg Cal/$</h3>
+        <p class="stat-value">{{ "%.1f"|format(stats.avg_cal_per_dollar) }}</p>
+    </div>
+</div>
+
+<div class="filter-section">
+    <h2>Filter Items</h2>
+    <form action="{{ url_for('filter_items') }}" method="get" class="filter-form">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label>Min Price ($)</label>
+                <input type="number" name="min_price" step="0.01" value="{{ filters.min_price if filters else '' }}" placeholder="0.00">
+            </div>
+            <div class="filter-group">
+                <label>Max Price ($)</label>
+                <input type="number" name="max_price" step="0.01" value="{{ filters.max_price if filters else '' }}" placeholder="20.00">
+            </div>
+            <div class="filter-group">
+                <label>Min Calories</label>
+                <input type="number" name="min_calories" value="{{ filters.min_calories if filters else '' }}" placeholder="0">
+            </div>
+            <div class="filter-group">
+                <label>Max Calories</label>
+                <input type="number" name="max_calories" value="{{ filters.max_calories if filters else '' }}" placeholder="2000">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Apply Filters</button>
+        <a href="{{ url_for('analyze') }}" class="btn btn-secondary">Clear Filters</a>
+    </form>
+</div>
+
+{% if best_items %}
+<div class="section">
+    <h2>Best Value Items (Highest Calories per Dollar)</h2>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                    <th>Calories</th>
+                    <th>Cal/$</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in best_items %}
+                <tr>
+                    <td class="rank">{{ loop.index }}</td>
+                    <td class="item-name">{{ item.name }}</td>
+                    <td>${{ "%.2f"|format(item.price) }}</td>
+                    <td>{{ item.calories }}</td>
+                    <td class="cal-per-dollar">{{ "%.1f"|format(item.cal_per_dollar) }}</td>
+                    <td>
+                        <div class="value-bar" style="width: {{ (item.cal_per_dollar / stats.best_value * 100)|int }}%"></div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% if worst_items %}
+<div class="section">
+    <h2>Lowest Value Items (Lowest Calories per Dollar)</h2>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                    <th>Calories</th>
+                    <th>Cal/$</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in worst_items %}
+                <tr>
+                    <td class="item-name">{{ item.name }}</td>
+                    <td>${{ "%.2f"|format(item.price) }}</td>
+                    <td>{{ item.calories }}</td>
+                    <td class="cal-per-dollar">{{ "%.1f"|format(item.cal_per_dollar) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% if all_items %}
+<div class="section">
+    <h2>All Items ({{ all_items|length }} total)</h2>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                    <th>Calories</th>
+                    <th>Cal/$</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in all_items %}
+                <tr>
+                    <td class="rank">{{ loop.index }}</td>
+                    <td class="item-name">{{ item.name }}</td>
+                    <td>${{ "%.2f"|format(item.price) }}</td>
+                    <td>{{ item.calories }}</td>
+                    <td class="cal-per-dollar">{{ "%.1f"|format(item.cal_per_dollar) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% else %}
+<div class="empty-state">
+    <h2>No Data Available</h2>
+    <p>Please upload menu data or scrape from a website to see analysis results.</p>
+    <div class="button-group">
+        <a href="{{ url_for('upload') }}" class="btn btn-primary">Upload Data</a>
+        <a href="{{ url_for('scrape') }}" class="btn btn-secondary">Scrape Website</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Data - Cafe Calorie Analyzer{% endblock %}
+
+{% block content %}
+<div class="upload-page">
+    <h1>Upload Menu Data</h1>
+    <p>Upload a JSON file containing menu items with name, price, and calorie information.</p>
+
+    <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data" class="upload-form">
+        <div class="file-input-wrapper">
+            <label for="file" class="file-label">
+                <span class="file-icon">📁</span>
+                <span class="file-text">Choose JSON File</span>
+            </label>
+            <input type="file" id="file" name="file" accept=".json" required>
+            <span id="file-name" class="file-name"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload and Analyze</button>
+    </form>
+
+    <div class="info-box">
+        <h3>JSON Format Example</h3>
+        <pre><code>[
+  {
+    "name": "Breakfast Burrito",
+    "price": 6.99,
+    "calories": 720
+  },
+  {
+    "name": "Grilled Chicken Sandwich",
+    "price": 8.49,
+    "calories": 520
+  }
+]</code></pre>
+        <p>Each item must have:</p>
+        <ul>
+            <li><strong>name</strong>: Item name (string)</li>
+            <li><strong>price</strong>: Price in dollars (number)</li>
+            <li><strong>calories</strong>: Calorie count (number)</li>
+        </ul>
+    </div>
+
+    <div class="info-box">
+        <h3>Example File</h3>
+        <p>You can use the example file included with this application:</p>
+        <a href="/static/example_menu.json" download class="btn btn-secondary">Download Example</a>
+    </div>
+</div>
+
+<script>
+document.getElementById('file').addEventListener('change', function(e) {
+    const fileName = e.target.files[0]?.name || 'No file chosen';
+    document.getElementById('file-name').textContent = fileName;
+});
+</script>
+{% endblock %}

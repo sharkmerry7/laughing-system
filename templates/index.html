@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Cafe Calorie Analyzer{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Welcome to the Cafe Calorie Per Dollar Analyzer</h1>
+    <p class="subtitle">Find the best value items on your cafe menu</p>
+</div>
+
+<div class="cards">
+    <div class="card">
+        <h2>View Analysis</h2>
+        <p>See the current menu analysis with calorie per dollar rankings</p>
+        <a href="{{ url_for('analyze') }}" class="btn btn-primary">View Results</a>
+    </div>
+
+    <div class="card">
+        <h2>Upload Menu Data</h2>
+        <p>Upload your own menu data in JSON format</p>
+        <a href="{{ url_for('upload') }}" class="btn btn-secondary">Upload</a>
+    </div>
+
+    <div class="card">
+        <h2>Scrape Website</h2>
+        <p>Automatically scrape menu data from Cafe Bon Appetit</p>
+        <a href="{{ url_for('scrape') }}" class="btn btn-secondary">Scrape</a>
+    </div>
+</div>
+
+<div class="info-section">
+    <h2>How It Works</h2>
+    <div class="steps">
+        <div class="step">
+            <div class="step-number">1</div>
+            <h3>Load Menu Data</h3>
+            <p>Upload a JSON file or scrape from a website</p>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <h3>Analyze</h3>
+            <p>Calculate calorie per dollar for each item</p>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <h3>Find Best Value</h3>
+            <p>See which items give you the most calories per dollar</p>
+        </div>
+    </div>
+</div>
+
+<div class="info-section">
+    <h2>About Calorie Per Dollar</h2>
+    <p>
+        The calorie per dollar metric helps you identify which menu items provide the most energy
+        (calories) for your money. This is useful for:
+    </p>
+    <ul>
+        <li>Budget-conscious diners looking to maximize value</li>
+        <li>Cafe operators analyzing menu pricing</li>
+        <li>Students trying to get the most from their meal plans</li>
+        <li>Anyone interested in food economics</li>
+    </ul>
+</div>
+{% endblock %}
