@@ -13,6 +13,10 @@ A tool to analyze menu items from Cafe Bon Appetit and calculate the calorie per
 - Detailed statistics and visualizations
 - Command-line interface for automation
 
+## Live Demo
+
+🌐 **Try it now**: [GitHub Pages Demo](https://[username].github.io/laughing-system/)
+
 ## Installation
 
 ```bash
@@ -104,6 +108,28 @@ If the website has bot protection, you may need to:
 2. Use the `--browser` flag for browser-based scraping (requires Chrome)
 3. Use the web interface's upload feature to load your data
 
+## Deployment
+
+This project can be deployed in multiple ways:
+
+### GitHub Pages (Easiest - Static Version)
+The static version (`docs/index.html`) runs entirely in your browser with no backend needed.
+
+1. Enable GitHub Pages in your repo settings
+2. Set source to `Deploy from a branch` → Select branch and `/docs` folder
+3. Access at: `https://[username].github.io/laughing-system/`
+
+**Features**: File upload, filtering, analysis | **Missing**: Web scraping (browser limitation)
+
+### Cloud Platforms (Full Flask App)
+Deploy the complete Flask application with all features:
+
+- **Render**: Free tier, auto-deploy from GitHub → [Deploy Guide](DEPLOYMENT.md#option-2-render-flask-app---free)
+- **PythonAnywhere**: Free tier, easy Python hosting → [Deploy Guide](DEPLOYMENT.md#option-3-pythonanywhere---free)
+- **Railway**: Modern platform, $5 free credit → [Deploy Guide](DEPLOYMENT.md#option-4-railway---free-with-limits)
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
+
 ## Project Structure
 
 ```
@@ -114,14 +140,22 @@ If the website has bot protection, you may need to:
 ├── scraper.py              # Web scraping module
 ├── requirements.txt        # Python dependencies
 ├── example_menu.json       # Sample menu data
-├── templates/              # HTML templates
+├── Procfile               # For Heroku/Render deployment
+├── runtime.txt            # Python version specification
+├── DEPLOYMENT.md          # Detailed deployment guide
+├── docs/
+│   └── index.html         # Static version for GitHub Pages
+├── templates/              # Flask HTML templates
 │   ├── base.html
 │   ├── index.html
 │   ├── analyze.html
 │   ├── upload.html
 │   └── scrape.html
-└── static/
-    ├── css/
-    │   └── style.css       # Styling
-    └── example_menu.json   # Downloadable sample
+├── static/
+│   ├── css/
+│   │   └── style.css       # Styling
+│   └── example_menu.json   # Downloadable sample
+└── .github/
+    └── workflows/
+        └── deploy.yml      # GitHub Pages auto-deployment
 ```

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafe Calorie Per Dollar Analyzer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .navbar {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links button:hover {
+            color: #3498db;
+        }
+
+        main {
+            min-height: calc(100vh - 200px);
+            padding: 2rem 0;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+
+        .upload-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .upload-section h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .file-input-wrapper {
+            margin: 1.5rem 0;
+        }
+
+        .file-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #3498db;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .file-label:hover {
+            background: #2980b9;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            font-weight: normal;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #2c3e50;
+            color: white;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .rank {
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .cal-per-dollar {
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        .value-bar {
+            height: 20px;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            border-radius: 10px;
+            min-width: 20px;
+        }
+
+        .filter-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .filter-group input {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .info-box {
+            background: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .info-box h3 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .navbar .container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">Cafe Calorie Analyzer</h1>
+            <ul class="nav-links">
+                <li><button onclick="showPage('home')">Home</button></li>
+                <li><button onclick="showPage('analyze')">Analysis</button></li>
+                <li><button onclick="showPage('upload')">Upload Data</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <div class="hero">
+                <h1>Cafe Calorie Per Dollar Analyzer</h1>
+                <p class="subtitle">Find the best value items on your cafe menu</p>
+            </div>
+
+            <div class="upload-section">
+                <h2>Get Started</h2>
+                <p>Upload your menu data or use the example data to see how it works.</p>
+                <button onclick="loadExampleData()" class="btn btn-primary">Load Example Data</button>
+                <button onclick="showPage('upload')" class="btn btn-secondary">Upload Your Data</button>
+            </div>
+        </div>
+
+        <!-- Upload Page -->
+        <div id="upload" class="page">
+            <div class="section">
+                <h2>Upload Menu Data</h2>
+                <p>Upload a JSON file containing menu items with name, price, and calorie information.</p>
+
+                <div class="file-input-wrapper">
+                    <label for="file" class="file-label">
+                        <span>📁 Choose JSON File</span>
+                    </label>
+                    <input type="file" id="file" accept=".json" onchange="handleFileUpload(event)">
+                </div>
+
+                <div class="info-box">
+                    <h3>JSON Format Example</h3>
+                    <pre>[
+  {
+    "name": "Breakfast Burrito",
+    "price": 6.99,
+    "calories": 720
+  },
+  {
+    "name": "Grilled Chicken Sandwich",
+    "price": 8.49,
+    "calories": 520
+  }
+]</pre>
+                    <p>Each item must have: <strong>name</strong> (string), <strong>price</strong> (number), <strong>calories</strong> (number)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Page -->
+        <div id="analyze" class="page">
+            <div id="analysis-results"></div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Cafe Calorie Per Dollar Analyzer | Find the best value items on your menu</p>
+        </div>
+    </footer>
+
+    <script>
+        let menuData = [];
+        let analyzedData = [];
+
+        // Example data
+        const exampleData = [
+            {"name": "Breakfast Burrito", "price": 6.99, "calories": 720},
+            {"name": "Grilled Chicken Sandwich", "price": 8.49, "calories": 520},
+            {"name": "Caesar Salad", "price": 7.99, "calories": 350},
+            {"name": "Pepperoni Pizza Slice", "price": 3.99, "calories": 285},
+            {"name": "Veggie Burger", "price": 7.49, "calories": 420},
+            {"name": "French Fries", "price": 2.99, "calories": 365},
+            {"name": "Pasta Alfredo", "price": 9.99, "calories": 1200},
+            {"name": "Turkey Club Sandwich", "price": 8.99, "calories": 640},
+            {"name": "Garden Salad", "price": 5.99, "calories": 180},
+            {"name": "Cheeseburger", "price": 6.99, "calories": 680},
+            {"name": "BBQ Chicken Pizza (whole)", "price": 12.99, "calories": 1800},
+            {"name": "Soup of the Day", "price": 4.99, "calories": 220},
+            {"name": "Quesadilla", "price": 6.49, "calories": 580},
+            {"name": "Tuna Melt", "price": 7.99, "calories": 520},
+            {"name": "Chicken Tenders (5 pc)", "price": 8.49, "calories": 850}
+        ];
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function loadExampleData() {
+            menuData = exampleData;
+            analyzeData();
+            showPage('analyze');
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    menuData = JSON.parse(e.target.result);
+                    analyzeData();
+                    showPage('analyze');
+                } catch (error) {
+                    alert('Error parsing JSON file: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function analyzeData(filters = {}) {
+            analyzedData = menuData.map(item => ({
+                ...item,
+                cal_per_dollar: item.calories / item.price
+            }));
+
+            // Apply filters
+            if (filters.minPrice !== undefined) {
+                analyzedData = analyzedData.filter(item => item.price >= filters.minPrice);
+            }
+            if (filters.maxPrice !== undefined) {
+                analyzedData = analyzedData.filter(item => item.price <= filters.maxPrice);
+            }
+            if (filters.minCalories !== undefined) {
+                analyzedData = analyzedData.filter(item => item.calories >= filters.minCalories);
+            }
+            if (filters.maxCalories !== undefined) {
+                analyzedData = analyzedData.filter(item => item.calories <= filters.maxCalories);
+            }
+
+            analyzedData.sort((a, b) => b.cal_per_dollar - a.cal_per_dollar);
+            displayResults();
+        }
+
+        function displayResults() {
+            if (analyzedData.length === 0) {
+                document.getElementById('analysis-results').innerHTML = '<div class="section"><h2>No data to display</h2><p>Please upload menu data or load the example.</p></div>';
+                return;
+            }
+
+            const stats = calculateStats();
+            const bestItems = analyzedData.slice(0, 10);
+            const worstItems = analyzedData.slice(-5).reverse();
+
+            let html = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Items</h3>
+                        <p class="stat-value">${stats.totalItems}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Average Price</h3>
+                        <p class="stat-value">$${stats.avgPrice.toFixed(2)}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Average Calories</h3>
+                        <p class="stat-value">${Math.round(stats.avgCalories)}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Avg Cal/$</h3>
+                        <p class="stat-value">${stats.avgCalPerDollar.toFixed(1)}</p>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h2>Filter Items</h2>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Min Price ($)</label>
+                            <input type="number" id="minPrice" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="filter-group">
+                            <label>Max Price ($)</label>
+                            <input type="number" id="maxPrice" step="0.01" placeholder="20.00">
+                        </div>
+                        <div class="filter-group">
+                            <label>Min Calories</label>
+                            <input type="number" id="minCalories" placeholder="0">
+                        </div>
+                        <div class="filter-group">
+                            <label>Max Calories</label>
+                            <input type="number" id="maxCalories" placeholder="2000">
+                        </div>
+                    </div>
+                    <button onclick="applyFilters()" class="btn btn-primary">Apply Filters</button>
+                    <button onclick="clearFilters()" class="btn btn-secondary">Clear Filters</button>
+                </div>
+
+                <div class="section">
+                    <h2>Top 10 Best Value Items (Most Calories Per Dollar)</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Item Name</th>
+                                    <th>Price</th>
+                                    <th>Calories</th>
+                                    <th>Cal/$</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${bestItems.map((item, index) => `
+                                    <tr>
+                                        <td class="rank">${index + 1}</td>
+                                        <td>${item.name}</td>
+                                        <td>$${item.price.toFixed(2)}</td>
+                                        <td>${item.calories}</td>
+                                        <td class="cal-per-dollar">${item.cal_per_dollar.toFixed(1)}</td>
+                                        <td>
+                                            <div class="value-bar" style="width: ${(item.cal_per_dollar / stats.bestValue * 100)}%"></div>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>5 Worst Value Items (Least Calories Per Dollar)</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Price</th>
+                                    <th>Calories</th>
+                                    <th>Cal/$</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${worstItems.map(item => `
+                                    <tr>
+                                        <td>${item.name}</td>
+                                        <td>$${item.price.toFixed(2)}</td>
+                                        <td>${item.calories}</td>
+                                        <td class="cal-per-dollar">${item.cal_per_dollar.toFixed(1)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>All Items (${analyzedData.length} total)</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Item Name</th>
+                                    <th>Price</th>
+                                    <th>Calories</th>
+                                    <th>Cal/$</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${analyzedData.map((item, index) => `
+                                    <tr>
+                                        <td class="rank">${index + 1}</td>
+                                        <td>${item.name}</td>
+                                        <td>$${item.price.toFixed(2)}</td>
+                                        <td>${item.calories}</td>
+                                        <td class="cal-per-dollar">${item.cal_per_dollar.toFixed(1)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('analysis-results').innerHTML = html;
+        }
+
+        function calculateStats() {
+            const prices = analyzedData.map(item => item.price);
+            const calories = analyzedData.map(item => item.calories);
+            const calPerDollar = analyzedData.map(item => item.cal_per_dollar);
+
+            return {
+                totalItems: analyzedData.length,
+                avgPrice: prices.reduce((a, b) => a + b, 0) / prices.length,
+                avgCalories: calories.reduce((a, b) => a + b, 0) / calories.length,
+                avgCalPerDollar: calPerDollar.reduce((a, b) => a + b, 0) / calPerDollar.length,
+                bestValue: Math.max(...calPerDollar)
+            };
+        }
+
+        function applyFilters() {
+            const filters = {
+                minPrice: parseFloat(document.getElementById('minPrice').value) || undefined,
+                maxPrice: parseFloat(document.getElementById('maxPrice').value) || undefined,
+                minCalories: parseInt(document.getElementById('minCalories').value) || undefined,
+                maxCalories: parseInt(document.getElementById('maxCalories').value) || undefined
+            };
+            analyzeData(filters);
+        }
+
+        function clearFilters() {
+            document.getElementById('minPrice').value = '';
+            document.getElementById('maxPrice').value = '';
+            document.getElementById('minCalories').value = '';
+            document.getElementById('maxCalories').value = '';
+            analyzeData();
+        }
+    </script>
+</body>
+</html>
