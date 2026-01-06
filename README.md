@@ -101,6 +101,35 @@ The example menu is automatically loaded. Visit http://localhost:5000/analyze to
 python cafe_analyzer.py --json example_menu.json
 ```
 
+## How to Populate Your Menu Data
+
+To analyze your actual cafe menu, you need to get the menu data into the system. See the **[Data Entry Guide](DATA_ENTRY_GUIDE.md)** for detailed instructions.
+
+**Quick options:**
+
+1. **Interactive Helper Script** (Easiest):
+   ```bash
+   python menu_entry_helper.py
+   ```
+   Enter items one at a time or paste comma-separated data.
+
+2. **Create JSON File Manually**:
+   ```json
+   [
+     {"name": "Item Name", "price": 6.99, "calories": 720}
+   ]
+   ```
+   Then upload via web interface or use `--json` flag.
+
+3. **Visit sony.cafebonappetit.com** and manually collect:
+   - Item names
+   - Prices
+   - Calorie counts (click items for nutrition info)
+
+   Then use the helper script or create a JSON file.
+
+See [DATA_ENTRY_GUIDE.md](DATA_ENTRY_GUIDE.md) for complete instructions.
+
 ## Notes
 
 If the website has bot protection, you may need to:
