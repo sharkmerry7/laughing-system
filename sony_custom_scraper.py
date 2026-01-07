@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Custom scraper for sony.cafebonappetit.com format
-Extracts items from scraped_page.html
+Handles their specific format: name, reg.X.XX, XXX cal. nutrition information
 """
 
 import re
@@ -19,74 +19,95 @@ def extract_sony_menu(html_file='scraped_page.html'):
     text = soup.get_text()
 
     items = []
-    lines = text.split('\n')
+    lines = [line.strip() for line in text.split('\n') if line.strip()]
 
     i = 0
     while i < len(lines):
-        line = lines[i].strip()
+        line = lines[i]
 
-        # Look for price pattern: reg.X.XX or reg. X.XX
+        # Look for price pattern: reg.X.XX
         price_match = re.search(r'reg\.?\s*(\d+\.\d{2})', line)
 
         if price_match:
             price = float(price_match.group(1))
 
-            # Look backwards for the item name (usually 1-3 lines before)
+            # Look backwards for name (usually previous line)
             name = None
-            for j in range(max(0, i-5), i):
-                potential_name = lines[j].strip()
-                # Name should be short, no price pattern, not a description
-                if (len(potential_name) > 3 and len(potential_name) < 100 and
-                    not re.search(r'reg\.|with|contains|vegan|farm to fork', potential_name, re.I) and
-                    not re.search(r'\d+\.\d{2}', potential_name)):
+            for j in range(max(0, i-3), i):
+                potential_name = lines[j]
+                # Skip descriptions and metadata
+                if (len(potential_name) > 2 and len(potential_name) < 100 and
+                    not re.search(r'reg\.|cal\.|with|contains|vegan|farm to fork|nutrition|absolutely', potential_name, re.I)):
                     name = potential_name
                     break
 
-            if name and price > 0:
+            # Look forwards for calories (usually next line or two)
+            calories = 0
+            for j in range(i+1, min(len(lines), i+5)):
+                cal_match = re.search(r'(\d+)\s*cal', lines[j], re.I)
+                if cal_match:
+                    calories = int(cal_match.group(1))
+                    break
+
+            if name and price > 0 and calories > 0:
                 # Check if already added
                 if not any(item['name'] == name for item in items):
                     items.append({
                         'name': name,
                         'price': price,
-                        'calories': 0,  # Not available
-                        'note': 'Calories not shown on this page'
+                        'calories': calories
                     })
 
         i += 1
 
-    return items
+    # Remove duplicates and sort
+    seen = set()
+    unique_items = []
+    for item in items:
+        key = (item['name'], item['price'], item['calories'])
+        if key not in seen:
+            seen.add(key)
+            unique_items.append(item)
+
+    unique_items.sort(key=lambda x: x['name'])
+
+    return unique_items
 
 
 def main():
     print("Extracting from scraped_page.html...")
+    print("Looking for Sony Cafe format: name, reg.X.XX, XXX cal...\n")
+
     items = extract_sony_menu()
 
     if items:
-        print(f"\n✓ Found {len(items)} items (WITHOUT calorie data):\n")
+        print(f"✓ Found {len(items)} menu items:\n")
         for item in items:
-            print(f"  • {item['name']} - ${item['price']}")
+            print(f"  • {item['name']}")
+            print(f"    ${item['price']:.2f} - {item['calories']} cal - {item['calories']/item['price']:.1f} cal/$")
 
-        print("\n" + "="*60)
-        print("⚠️  WARNING: NO CALORIE DATA AVAILABLE")
-        print("="*60)
-        print("\nThe page you scraped doesn't show calories.")
-        print("You need to:")
-        print("  1. Click on menu items to see nutrition info")
-        print("  2. Look for a 'Nutrition' tab or button")
-        print("  3. Navigate to a page that shows calories")
-        print("\nWithout calories, you can't calculate calorie per dollar!")
-        print("="*60)
+        # Save to JSON
+        with open('menu.json', 'w') as f:
+            json.dump(items, f, indent=2)
 
-        # Ask user if they want to save anyway
-        response = input("\nSave these items without calories? (y/n): ").lower()
-        if response == 'y':
-            with open('menu_no_calories.json', 'w') as f:
-                json.dump(items, f, indent=2)
-            print("✓ Saved to menu_no_calories.json")
-            print("\nYou'll need to manually add calories to each item.")
+        print(f"\n{'='*60}")
+        print(f"✓ SUCCESS! Saved {len(items)} items to menu.json")
+        print(f"{'='*60}")
+        print("\nNext steps:")
+        print("  python cafe_analyzer.py --json menu.json")
+        print("\nOr upload menu.json to the web interface:")
+        print("  python app.py")
+
+        return True
     else:
-        print("✗ No items found")
+        print("✗ No items found with all three: name, price, and calories")
+        print("\nTroubleshooting:")
+        print("  1. Make sure scraped_page.html has the full menu")
+        print("  2. Check that items show 'reg.X.XX' for price")
+        print("  3. Check that items show 'XXX cal' for calories")
+        return False
 
 
 if __name__ == '__main__':
-    main()
+    success = main()
+    exit(0 if success else 1)
